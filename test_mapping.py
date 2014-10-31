@@ -15,12 +15,12 @@ conn = boto.ec2.connect_to_region(
 # Define AMI IDs and instance types (TODO: add supprt for arrays)
 images = [
     # EBS-backed (Quick-start AMIs)
-    'ami-b5a7ea85', # Amazon Linux AMI 2014.09.1 (HVM)
-    'ami-99bef1a9', # Red Hat Enterprise Linux 7.0 (HVM), SSD Volume Type
-    'ami-3b0f420b', # SuSE Linux Enterprise Server 11 SP3 (HVM), SSD Volume Type
+    #'ami-b5a7ea85', # Amazon Linux AMI 2014.09.1 (HVM)
+    #'ami-99bef1a9', # Red Hat Enterprise Linux 7.0 (HVM), SSD Volume Type
+    #'ami-3b0f420b', # SuSE Linux Enterprise Server 11 SP3 (HVM), SSD Volume Type
     'ami-3d50120d', # Ubuntu Server 14.04 LTS (HVM), SSD Volume Type
     # Instance store-backed (Amazon Linux 2014.09 & Ubuntu 14.04)
-    'ami-9b86c6ab', # Amazon Linux AMI 2014.09.0 x86_64 HVM S3
+    #'ami-9b86c6ab', # Amazon Linux AMI 2014.09.0 x86_64 HVM S3
     'ami-0185fd31'  # Ubuntu Server 14.04 LTS (HVM) S3
 ]
 
@@ -48,8 +48,7 @@ for image_id in images:
         'i2.xlarge',
         'i2.2xlarge',
         'i2.4xlarge',
-        'i2.8xlarge',
-        'hs1.8xlarge'
+        'i2.8xlarge'
     ]
     
     
