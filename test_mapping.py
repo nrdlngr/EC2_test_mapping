@@ -48,7 +48,8 @@ for image_id in images:
         'i2.xlarge',
         'i2.2xlarge',
         'i2.4xlarge',
-        'i2.8xlarge'
+        'i2.8xlarge',
+        'hs1.8xlarge'
     ]
     
     
@@ -92,14 +93,16 @@ for image_id in images:
                         device_type = "EBS(" + mapping.volume_type + ")"
                     print name + ": " + device_type
             print
-    
+            
+            boot_wait_time=180
+            
             # Boot instance
             print "Booting instance..."
             instance_id = instance.id
             print "Instance ID: " + instance_id
             print
             print "... waiting for EC2 to generate public DNS ..."
-    
+            time.sleep(5)
             instance = conn.get_only_instances(instance_ids=instance_id)
     
             while "amazonaws.com" not in instance[0].public_dns_name:
@@ -108,9 +111,9 @@ for image_id in images:
             public_dns = instance[0].public_dns_name
             print "Public DNS: " + public_dns
             print
-            print "... waiting 60 seconds for instance ..."
+            print "... waiting " + str(boot_wait_time) + " seconds for instance ..."
             print "... to boot and start SSH daemon    ..."
-            time.sleep(60)
+            time.sleep(boot_wait_time)
             print
     
             # Log into instance with Paramiko SSHClient
