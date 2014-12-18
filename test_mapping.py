@@ -59,15 +59,21 @@ images = [
     #'ami-0185fd31'  # Ubuntu Server 14.04 LTS (HVM) S3
 ]
 
+''' Block device mapping example
+bdm = boto.ec2.blockdevicemapping.BlockDeviceMapping()
+bdm['/dev/sdf'] = boto.ec2.blockdevicemapping.EBSBlockDeviceType(ephemeral_name='ephemeral0')
+bdm['/dev/sdg'] = boto.ec2.blockdevicemapping.EBSBlockDeviceType(ephemeral_name='ephemeral1') 
+'''
+
 for image_id in images:
     print "============================"
     print "======= " + image_id + " ======="
     print "============================"
     # Run each AMI on the following instance types
     instance_types = [
-        'm3.medium'#,
+#        'm3.medium',
 #        'm3.large',
-#        'm3.xlarge',
+        'm3.xlarge'#,
 #        'm3.2xlarge',
 #        'c3.large',
 #        'c3.xlarge',
@@ -94,7 +100,8 @@ for image_id in images:
                 image_id,
                 key_name=test_name,
                 security_groups=[group_name],
-                instance_type=itype,
+                instance_type=itype#,
+                #block_device_map = bdm
                 )
 
         for instance in reservation.instances:
