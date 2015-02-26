@@ -59,11 +59,11 @@ images = [
     #'ami-0185fd31'  # Ubuntu Server 14.04 LTS (HVM) S3
 ]
 
-''' Block device mapping example
-bdm = boto.ec2.blockdevicemapping.BlockDeviceMapping()
-bdm['/dev/sdf'] = boto.ec2.blockdevicemapping.EBSBlockDeviceType(ephemeral_name='ephemeral0')
-bdm['/dev/sdg'] = boto.ec2.blockdevicemapping.EBSBlockDeviceType(ephemeral_name='ephemeral1') 
-'''
+# Block device mapping example
+# bdm = boto.ec2.blockdevicemapping.BlockDeviceMapping()
+# bdm['/dev/sdb'] = boto.ec2.blockdevicemapping.EBSBlockDeviceType(ephemeral_name='ephemeral0')
+# bdm['/dev/sdc'] = boto.ec2.blockdevicemapping.EBSBlockDeviceType(ephemeral_name='ephemeral1') 
+
 
 for image_id in images:
     print "============================"
@@ -71,26 +71,30 @@ for image_id in images:
     print "============================"
     # Run each AMI on the following instance types
     instance_types = [
-#        'm3.medium',
-#        'm3.large',
-        'm3.xlarge'#,
-#        'm3.2xlarge',
-#        'c3.large',
-#        'c3.xlarge',
-#        'c3.2xlarge',
-#        'c3.4xlarge',
-#        'c3.8xlarge',
-#        'g2.2xlarge',
-#        'r3.large',
-#        'r3.xlarge',
-#        'r3.2xlarge',
-#        'r3.4xlarge',
-#        'r3.8xlarge'#,
-#        'i2.xlarge',
-#        'i2.2xlarge',
-#        'i2.4xlarge',
-#        'i2.8xlarge'
-#        'hs1.8xlarge'
+        'm3.medium',
+        'm3.large',
+        'm3.xlarge',
+        'm3.2xlarge',
+        'c3.large',
+        'c3.xlarge',
+        'c3.2xlarge',
+        'c3.4xlarge',
+        'c3.8xlarge',
+        'c4.xlarge',
+        'c4.2xlarge',
+        'c4.4xlarge',
+        'c4.8xlarge',
+        'g2.2xlarge',
+        'r3.large',
+        'r3.xlarge',
+        'r3.2xlarge',
+        'r3.4xlarge',
+        'r3.8xlarge',
+        'i2.xlarge',
+        'i2.2xlarge',
+        'i2.4xlarge',
+        'i2.8xlarge',
+        'hs1.8xlarge'
     ]
     
     
@@ -140,16 +144,17 @@ for image_id in images:
             
             # Boot instance
             print "Booting instance..."
+            time.sleep(10)
             instance_id = instance.id
             print "Instance ID: " + instance_id
             print
             print "... waiting for EC2 to generate public DNS ..."
-            time.sleep(5)
+            time.sleep(20)
             instance = conn.get_only_instances(instance_ids=instance_id)
     
             while "amazonaws.com" not in instance[0].public_dns_name:
                 instance = conn.get_only_instances(instance_ids=instance_id)
-                time.sleep(1)
+                time.sleep(10)
             public_dns = instance[0].public_dns_name
             print "Public DNS: " + public_dns
             print
@@ -180,6 +185,16 @@ for image_id in images:
     
             print "Listing available and mounted volumes from inside instance:"
             stdin, stdout, stderr = client.exec_command('lsblk')  
+            print "".join(stdout.readlines())
+            
+            print
+            print "Checking for AES-NI flag:"
+            stdin, stdout, stderr = client.exec_command('echo "$(grep aes /proc/cpuinfo | wc -l) cores support AES-NI instruction."')  
+            print "".join(stdout.readlines())
+            
+            print
+            print "Testing AES-NI:"
+            stdin, stdout, stderr = client.exec_command('openssl speed -elapsed -evp aes-256-gcm')  
             print "".join(stdout.readlines())
 
             print "Shutting down instance ID: " + instance_id
